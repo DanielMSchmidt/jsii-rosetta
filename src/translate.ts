@@ -243,7 +243,9 @@ export class SnippetTranslator {
     );
     const converted = converter.convert(this.compilation.rootFile);
     this.translateDiagnostics.push(...filterVisibleDiagnostics(converter.diagnostics, this.visibleSpans));
-    return renderTree(converted, { indentChar: visitor.indentChar, visibleSpans: this.visibleSpans });
+    const postProcessedConverted = visitor.postProcess(converted);
+
+    return renderTree(postProcessedConverted, { indentChar: visitor.indentChar, visibleSpans: this.visibleSpans });
   }
 
   public syntaxKindCounter(): Partial<Record<ts.SyntaxKind, number>> {

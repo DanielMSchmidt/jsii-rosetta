@@ -23,6 +23,7 @@ export function analyzeStructType(typeChecker: ts.TypeChecker, type: ts.Type): O
   }
 
   const jsiiSym = lookupJsiiSymbol(typeChecker, type.symbol);
+  console.log('🚀 ~ file: jsii-utils.ts:26 ~ analyzeStructType ~ jsiiSym:', jsiiSym);
   if (jsiiSym) {
     return { kind: 'struct', type, jsiiSym };
   }
@@ -194,15 +195,18 @@ export function lookupJsiiSymbol(typeChecker: ts.TypeChecker, sym: ts.Symbol): J
   if (hasAnyFlag(sym.flags, ts.SymbolFlags.Alias)) {
     sym = typeChecker.getAliasedSymbol(sym);
   }
+  console.log('🚀 ~ file: jsii-utils.ts:196 ~ lookupJsiiSymbol ~ sym:', sym);
 
   const decl: ts.Node | undefined = sym.declarations?.[0];
   if (!decl) {
+    console.log(`No declaration for symbol ${sym.name}`);
     return undefined;
   }
 
   if (ts.isSourceFile(decl)) {
     // This is a module.
     const sourceAssembly = findTypeLookupAssembly(decl.fileName);
+    console.log('🚀 ~ file: jsii-utils.ts:208 ~ lookupJsiiSymbol ~ sourceAssembly:', sourceAssembly);
     return fmap(
       sourceAssembly,
       (asm) =>
@@ -223,6 +227,7 @@ export function lookupJsiiSymbol(typeChecker: ts.TypeChecker, sym: ts.Symbol): J
   }
 
   if (!isDeclaration(decl)) {
+    console.log('Not a decl');
     return undefined;
   }
 
@@ -232,16 +237,21 @@ export function lookupJsiiSymbol(typeChecker: ts.TypeChecker, sym: ts.Symbol): J
   }
 
   const declSym = getSymbolFromDeclaration(decl, typeChecker);
+  console.log('🚀 ~ file: jsii-utils.ts:239 ~ lookupJsiiSymbol ~ declSym:', declSym);
   if (!declSym) {
     return undefined;
   }
 
   const fileName = decl.getSourceFile().fileName;
+  console.log('🚀 ~ file: jsii-utils.ts:246 ~ lookupJsiiSymbol ~ fileName:', fileName);
   const sourceAssembly = findTypeLookupAssembly(fileName);
   const symbolId = symbolIdentifier(typeChecker, declSym, { assembly: sourceAssembly?.assembly });
+  console.log('🚀 ~ file: jsii-utils.ts:247 ~ lookupJsiiSymbol ~ symbolId:', symbolId);
   if (!symbolId) {
     return undefined;
   }
+
+  console.log('🚀 ~ file: jsii-utils.ts:254 ~ lookupJsiiSymbol ~ sourceAssembly:', sourceAssembly);
 
   return fmap(/([^#]*)(#.*)?/.exec(symbolId), ([, typeSymbolId, memberFragment]) => {
     if (memberFragment) {

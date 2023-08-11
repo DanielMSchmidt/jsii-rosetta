@@ -254,17 +254,21 @@ const ASM_CACHE: TypeLookupAssembly[] = [];
  */
 export function findTypeLookupAssembly(startingDirectory: string): TypeLookupAssembly | undefined {
   const pjLocation = findPackageJsonLocation(path.resolve(startingDirectory));
+  console.log('🚀 ~ file: assemblies.ts:257 ~ findTypeLookupAssembly ~ pjLocation:', pjLocation);
   if (!pjLocation) {
     return undefined;
   }
   const directory = path.dirname(pjLocation);
+  console.log('🚀 ~ file: assemblies.ts:262 ~ findTypeLookupAssembly ~ directory:', directory);
 
   const fromCache = ASM_CACHE.find((c) => c.directory === directory);
+  console.log('🚀 ~ file: assemblies.ts:265 ~ findTypeLookupAssembly ~ fromCache:', fromCache);
   if (fromCache) {
     return fromCache;
   }
 
   const loaded = loadLookupAssembly(directory);
+  console.log('🚀 ~ file: assemblies.ts:271 ~ findTypeLookupAssembly ~ loaded:', loaded);
   if (!loaded) {
     return undefined;
   }

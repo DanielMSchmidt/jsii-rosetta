@@ -1,6 +1,7 @@
 import * as calc from 'jsii-calc';
 import { homonymousForwardReferences as ns } from 'jsii-calc';
 import * as aws from './.gen/providers/aws';
+// import { Kwargs } from 'jsii-calc/lib/submodule/isolated';
 
 // Access without existing type information
 const awsKmsKeyExamplekms = new aws.kms.KmsKey(this, 'examplekms', {
@@ -13,3 +14,5 @@ const myClass = new calc.submodule.MyClass({ prop: calc.submodule.child.SomeEnum
 
 // Access via a renamed import
 ns.foo.Consumer.consume({ homonymous: { stringProperty: 'yes' } });
+
+calc.submodule.isolated.Kwargs.method({ extra: 'fries' });

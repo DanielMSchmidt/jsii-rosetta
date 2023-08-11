@@ -121,6 +121,8 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
    */
   private readonly imports = new Array<ImportedModule>();
 
+  private importsToAddAfterTheFact: ObjectLiteralStruct[] = [];
+
   /**
    * Synthetic imports that need to be added as a final step
    */
@@ -131,9 +133,19 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
   public constructor(private readonly options: PythonVisitorOptions = {}) {
     super();
   }
-
   public mergeContext(old: PythonLanguageContext, update: Partial<PythonLanguageContext>) {
     return Object.assign({}, old, update);
+  }
+
+  public override postProcess(tree: OTree): OTree {
+    console.log(
+      'POST PROCESSING',
+      this.importsToAddAfterTheFact.map((im) => ({
+        name: im.type.symbol.name,
+      })),
+    );
+    // console.log(JSON.stringify(tree, null, 2));
+    return tree;
   }
 
   public override commentRange(comment: CommentSyntax, _context: PythonVisitorContext): OTree {
@@ -430,6 +442,8 @@ export class PythonVisitor extends DefaultVisitor<PythonLanguageContext> {
 
     const structName =
       structType.kind === 'struct' ? this.importedNameForType(structType.jsiiSym) : structType.type.symbol.name;
+
+    this.importsToAddAfterTheFact.push(structType);
 
     return this.renderObjectLiteralExpression(`${structName}(`, ')', true, node, context);
   }

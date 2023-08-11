@@ -10,6 +10,9 @@ export class VisualizeAstVisitor implements AstHandler<void> {
   public readonly defaultContext: void = undefined;
 
   public constructor(private readonly includeHandlerNames?: boolean) {}
+  public postProcess(tree: OTree): OTree {
+    return tree;
+  }
 
   public mergeContext(_old: any, _update: any): any {
     return undefined;

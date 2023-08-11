@@ -21,6 +21,10 @@ export abstract class DefaultVisitor<C> implements AstHandler<C> {
 
   public abstract mergeContext(old: C, update: C): C;
 
+  public postProcess(tree: OTree): OTree {
+    return tree;
+  }
+
   public commentRange(comment: CommentSyntax, _context: AstRenderer<C>): OTree {
     return new OTree([comment.isTrailing ? ' ' : '', comment.text, comment.hasTrailingNewLine ? '\n' : '']);
   }

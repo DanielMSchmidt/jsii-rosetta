@@ -431,6 +431,7 @@ export interface AstHandler<C> {
   readonly defaultContext: C;
   readonly indentChar?: ' ' | '\t';
   mergeContext(old: C, update: Partial<C>): C;
+  postProcess(tree: OTree): OTree;
 
   sourceFile(node: ts.SourceFile, context: AstRenderer<C>): OTree;
   commentRange(node: CommentSyntax, context: AstRenderer<C>): OTree;
